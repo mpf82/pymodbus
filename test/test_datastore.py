@@ -278,16 +278,19 @@ class SqlDataStoreTest(unittest.TestCase):
         self.slave._db_create.assert_called_once_with(
             self.slave.table, self.slave.database
         )
-
     def testValidateSuccess(self):
-        self.slave._connection.execute.return_value.fetchall.return_value = self.mock_values
+        mock_result = MockSqlResult(
+            rowcount=len(self.mock_values)
+        )
+        self.slave._connection.execute = MagicMock(return_value=mock_result)
         self.assertTrue(self.slave.validate(
             self.mock_function, self.mock_addr, len(self.mock_values))
         )
 
     def testValidateFailure(self):
         wrong_count = 9
-        self.slave._connection.execute.return_value.fetchall.return_value = self.mock_values
+        mock_result = MockSqlResult(rowcount=len(self.mock_values))
+        self.slave._connection.execute = MagicMock(return_value=mock_result)
         self.assertFalse(self.slave.validate(
             self.mock_function, self.mock_addr, wrong_count)
         )

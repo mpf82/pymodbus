@@ -125,15 +125,8 @@ def run_binary_payload_ex():
     print(result.registers)
     print("\n")
     decoder = BinaryPayloadDecoder.fromRegisters(result.registers,
-                                                 byteorder=Endian.Big,
+                                                 byteorder=Endian.Little,
                                                  wordorder=Endian.Little)
-
-    assert decoder._byteorder == builder._byteorder, \
-            "Make sure byteorder is consistent between BinaryPayloadBuilder and BinaryPayloadDecoder"
-
-    assert decoder._wordorder == builder._wordorder, \
-            "Make sure wordorder is consistent between BinaryPayloadBuilder and BinaryPayloadDecoder"
-
 
     decoded = OrderedDict([
         ('string', decoder.decode_string(8)),
